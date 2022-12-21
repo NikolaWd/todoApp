@@ -5,11 +5,12 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+                <div class="card-header">Todos App</div>
 
                 <div class="card-body">
 
-                    <form>
+                    <form method="POST" action="{{ route('todos.store') }}">
+                    @csrf
                         <div class="mb-3">
                           <label class="form-label">Title</label>
                           <input type="text" name="title" class="form-control">
@@ -18,12 +19,8 @@
                           <label class="form-label">Description</label>
                           <textarea type="text" cols="5" rows="5" name="description" class="form-control"></textarea>
                         </div>
-                        <div class="mb-3 form-check">
-                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                          <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                        </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
-                      </form>
+                    </form>
 
                 </div>
             </div>

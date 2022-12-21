@@ -13,7 +13,7 @@ class TodosRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class TodosRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required|min:3|max:100',
+            'description' => 'required|string|min:5|max:300'
         ];
     }
 }

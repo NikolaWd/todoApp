@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Todo;
 use Illuminate\Http\Request;
+use App\Http\Requests\TodosRequest;
 
 class TodoController extends Controller
 {
@@ -13,7 +15,10 @@ class TodoController extends Controller
      */
     public function index()
     {
-        return view('todos/index');
+        $todos = Todo::all();
+        return view('todos/index', [
+            'todos' => $todos
+        ]);
     }
 
     /**
@@ -32,9 +37,18 @@ class TodoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TodosRequest $request)
     {
-        return $request->all();
+        //$request->validated();
+        Todo::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'is_completed' => 0
+        ]);
+
+        $request->session()->flash('alert-success', 'Todo Created Successfully.');
+
+        return to_route('todos.index');
     }
 
     /**
@@ -45,7 +59,15 @@ class TodoController extends Controller
      */
     public function show($id)
     {
-        //
+        $todo = Todo::find($id);
+
+        if(!$todo){
+            request()->session()->flash('error', 'Unable to locate the Todo.');
+            return to_route('todos.index')->withErrors([
+                'error' => 'Unable to locate the Todo'
+            ]);
+        }
+        return view('todos.show', ['todo' => $todo]);
     }
 
     /**

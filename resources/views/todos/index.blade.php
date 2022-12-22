@@ -17,6 +17,14 @@
 
                 @endif
 
+                @if (Session::has('alert-info'))
+
+                    <div class="alert alert-info" role="alert">
+                        {{ Session::get('alert-info') }}
+                    </div>
+
+                @endif
+
 
                 @if (Session::has('error'))
 
@@ -25,7 +33,9 @@
                     </div>
 
                 @endif
-                    
+
+                
+                <a class="btn btn-primary mb-4" href="{{ route('todos.create') }}">Create Todo</a> 
 
                     @if (count($todos) > 0)
                         <table class="table">
@@ -58,9 +68,11 @@
 
                                         </td>
                                         <td class="d-flex">
-                                            <a href="{{ route('todos.show', $todo->id)}}" class="btn btn-success btn-sm mx-1">View</a> 
-                                            <a href="" class="btn btn-primary btn-sm mx-1">Edit</a>                                             
-                                            <form action="" class="mx-1">
+                                            <a href="{{ route('todos.show', $todo->id) }}" class="btn btn-success btn-sm mx-1">View</a> 
+                                            <a href="{{ route('todos.edit', $todo->id) }}" class="btn btn-primary btn-sm mx-1">Edit</a>                                             
+                                            <form method="POST" action="{{ route('todos.destroy') }}" class="mx-1">
+                                                @csrf
+                                                @method('DELETE')
                                                 <input type="hidden" name="todo_id" value="{{ $todo->id }}">
                                                 <input type="submit" value="Delete" class="btn btn-danger btn-sm">
                                             </form>

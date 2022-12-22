@@ -78,7 +78,15 @@ class TodoController extends Controller
      */
     public function edit($id)
     {
-        //
+        $todo = Todo::find($id);
+
+        if(!$todo){
+            request()->session()->flash('error', 'Unable to locate the Todo.');
+            return to_route('todos.index')->withErrors([
+                'error' => 'Unable to locate the Todo'
+            ]);
+        }
+        return view('todos.edit', ['todo' => $todo]);
     }
 
     /**
@@ -88,9 +96,23 @@ class TodoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TodosRequest $request)
     {
-        //
+        $todo = Todo::find($request->todo_id);
+        if(!$todo){
+            request()->session()->flash('error', 'Unable to locate the Todo.');
+            return to_route('todos.index')->withErrors([
+                'error' => 'Unable to locate the Todo'
+            ]);
+        }
+
+        $todo->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'is_completed' => $request->is_completed
+        ]);
+        $request->session()->flash('alert-info', 'Todo Updated Successfully.');
+        return to_route('todos.index');
     }
 
     /**
@@ -99,8 +121,19 @@ class TodoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        
+        $todo = Todo::find($request->todo_id);
+        if(!$todo){
+            request()->session()->flash('error', 'Unable to locate the Todo.');
+            return to_route('todos.index')->withErrors([
+                'error' => 'Unable to locate the Todo'
+            ]);
+        }
+
+        $todo->delete();
+        $request->session()->flash('alert-success', 'Todo Deleted Successfully.');
+        return to_route('todos.index');
     }
 }
